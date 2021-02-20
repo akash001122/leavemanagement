@@ -4,6 +4,9 @@ const prisma = require('./prismaplugin/prisma')
 const {employeePlugin} = require('./plugins/employee/index');
 const { authPlugin } = require('./plugins/auth/index');
 const {leavePlugin} = require('./plugins/apply_leave/index');
+const {managerPlugin} = require('./plugins/manager_leave/index');
+const {hrPlugin} = require('./plugins/hr_leave/index');
+
 
 
 const server = Hapi.server({
@@ -14,7 +17,7 @@ const server = Hapi.server({
 
 const init = async (server) => {
     
-    await server.register([authPlugin,employeePlugin,leavePlugin,prisma]);
+    await server.register([authPlugin, employeePlugin, leavePlugin, managerPlugin, hrPlugin, prisma]);
     await server.initialize();
     await server.start();
     console.log(`Server running on ${server.info.uri}`);
