@@ -7,7 +7,7 @@ const leaveHandler = async (request,h) => {
     
     const leaveDetail = await prisma.$queryRaw`SELECT * FROM public."Leave";`;
     return {
-        statusCode: 201,
+        statusCode: 200,
         message: "Leave Details fetched Successfully",
         data: {
             leavehistory: {leaveDetail},

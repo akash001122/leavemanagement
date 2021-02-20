@@ -74,7 +74,6 @@ enum LeaveType {
 
 enum Status {
   PENDING
-  FIRST_APPROVAL
-  SECOND_APPROVAL
+  APPROVED
   REJECTED
 }
