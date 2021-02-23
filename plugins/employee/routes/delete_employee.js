@@ -9,7 +9,7 @@ module.exports = {
     path: '/employee/{empId}',
     handler: employeeHandler,
      options: {
-         auth: false,
+         auth: 'jwt',
          validate: {
              params: employeeDetailValidator,
          }

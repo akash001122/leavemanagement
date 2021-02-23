@@ -8,7 +8,7 @@ module.exports = {
     path: '/manager/leave/{empId}',
     handler: leaveHandler,
     options: {
-        auth: false,
+        auth: 'jwt',
         validate: {
             params: employeeIdValidator
         }

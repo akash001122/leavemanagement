@@ -5,7 +5,7 @@ CREATE TYPE "ERole" AS ENUM ('HR', 'MANAGER', 'EMPLOYEE');
 CREATE TYPE "LeaveType" AS ENUM ('SICK', 'PAID', 'COMPLIMENTARY', 'LOP', 'EMERGENCY', 'OTHERS');
 
 -- CreateEnum
-CREATE TYPE "Status" AS ENUM ('PENDING', 'FIRST_APPROVAL', 'SECOND_APPROVAL', 'REJECTED');
+CREATE TYPE "Status" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 
 -- CreateTable
 CREATE TABLE "Userlogin" (
@@ -26,6 +26,8 @@ CREATE TABLE "Employee" (
     "email" TEXT NOT NULL,
     "mobile" TEXT NOT NULL,
     "roleDescription" TEXT NOT NULL,
+    "valid" BOOLEAN NOT NULL DEFAULT true,
+    "depId" INTEGER NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -35,7 +37,6 @@ CREATE TABLE "Department" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "manager" TEXT NOT NULL,
-    "empId" INTEGER NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -48,22 +49,11 @@ CREATE TABLE "Leave" (
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3) NOT NULL,
     "leaveDescription" TEXT NOT NULL,
+    "valid" BOOLEAN NOT NULL DEFAULT true,
     "leaveTimeStamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "leaveStatus" "Status" NOT NULL DEFAULT E'PENDING',
     "statusTimeStamp" TIMESTAMP(3) NOT NULL,
     "totalLeavesLeft" INTEGER NOT NULL DEFAULT 20,
-
-    PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Token" (
-    "id" SERIAL NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "expiration" TIMESTAMP(3) NOT NULL,
-    "valid" BOOLEAN NOT NULL DEFAULT true,
-    "userId" INTEGER NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -81,10 +71,7 @@ CREATE UNIQUE INDEX "Department.name_unique" ON "Department"("name");
 ALTER TABLE "Userlogin" ADD FOREIGN KEY ("empId") REFERENCES "Employee"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Department" ADD FOREIGN KEY ("empId") REFERENCES "Employee"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Employee" ADD FOREIGN KEY ("depId") REFERENCES "Department"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Leave" ADD FOREIGN KEY ("employeeId") REFERENCES "Employee"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Token" ADD FOREIGN KEY ("userId") REFERENCES "Userlogin"("id") ON DELETE CASCADE ON UPDATE CASCADE;

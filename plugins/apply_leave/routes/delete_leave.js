@@ -1,5 +1,5 @@
 'use strict';
-const {leaveHandler} = require('../handlers/get_leave');
+const {leaveHandler} = require('../handlers/delete_leave');
 
 
 module.exports = {

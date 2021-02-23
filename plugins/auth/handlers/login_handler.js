@@ -19,18 +19,17 @@ const loginHandler = async function(request,h) {
     const {userName, password} = request.payload;
     const {prisma} = request.server.app;
     try{
-        const fetchUser = await prisma.$queryRaw`SELECT * FROM public."Userlogin" WHERE "userName" = ${userName};`;
-        if(userName === fetchUser[0].userName){
+        const fetchUser = await prisma.$queryRaw`SELECT * FROM public.userlogin WHERE username = ${userName};`;
+        if(userName === fetchUser[0].username){
             const match = await bcrypt.compare(password,fetchUser[0].password);
             if(match){
-                console.log("Hello");
                 tokenId = uuid.v4();
                 const jwtToken = generateAuthToken(tokenId);
                 const credentials = {
                     tokenId,
                     userId: fetchUser[0].id,
-                    empId: fetchUser[0].empId,
-                    expiration: new Date() + 15 * 60 *1000,
+                    empId: fetchUser[0].empid,
+                    role: fetchUser[0].role,
                     isValid: true
                 }
                 await setAsync(tokenId,JSON.stringify(credentials))
@@ -39,7 +38,8 @@ const loginHandler = async function(request,h) {
                     message: "Login Successfull",
                     data: {
                         id: fetchUser[0].id,
-                        userName: fetchUser[0].userName,
+                        empId: fetchUser[0].empid,
+                        userName: fetchUser[0].username,
                         role: fetchUser[0].role,
                         jwt: jwtToken
                     }
@@ -67,7 +67,7 @@ function generateAuthToken(tokenId) {
         isValid: true,
     };
 
-    return jwt.sign( jwtPayload ,JWT_SECRET,{
+    return jwt.sign( jwtPayload ,'classified',{
         expiresIn: "30 days"
     });
 }

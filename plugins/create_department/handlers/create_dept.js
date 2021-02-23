@@ -7,29 +7,23 @@ client.on("error", function(error) {
     console.error(error);
   });
 
-const leaveHandler = async (request,h) => {
+const deptHandler = async (request,h) => {
     try{
         const {tokenId} = request.auth.credentials;
         const tokenDetails = await getAsync(tokenId);
         const det = JSON.parse(tokenDetails);
-        if(det.role === "HR" || det.role ==="MANAGER"){
+        if(det.role === "HR"){
             const {prisma} = request.server.app;
-            const leaveDetail = await prisma.$queryRaw`SELECT * FROM public.leave;`;
-            return {
-                statusCode: 200,
-                message: "Leave Details fetched Successfully",
-                data: {
-                    leavehistory: {leaveDetail},
-                    jwt: request.auth.credentials
-                }
-            }
+            const {name,manager} = request.payload;
+            await prisma.$queryRaw`INSERT INTO public.department(name,manager) VALUES (${name},${manager});`;    
+            return h.response().code(201);
         }else{
             return{
                 Message: "Access Denied"
             }
-        } 
+        }  
     }catch(e){
         throw e;
     }
 }
-exports.leaveHandler = leaveHandler;
+exports.deptHandler = deptHandler;

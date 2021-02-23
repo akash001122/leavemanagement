@@ -17,7 +17,8 @@ const leaveHandler = async (request,h) => {
             const id = request.params.empId
             const {leaveStatus} = request.payload;
             
-            const leaveDetail = await prisma.$queryRaw`SELECT * FROM public.leave WHERE employeeid = ${id} AND valid = true AND leaveStatus = 'PENDING' ORDER BY id;`;
+            const leaveDetail = await prisma.$queryRaw`SELECT * FROM public.leave WHERE employeeid = ${id} AND valid = true AND leaveStatus != 'PENDING' AND leaveStatus != ${leaveStatus} order by id DESC;`;
+            console.log(leaveDetail);
             const createLeave = await prisma.$queryRaw`UPDATE public.leave SET leavestatus= ${leaveStatus}, statustimestamp = ${Date.now()} WHERE id = ${leaveDetail[0].id};`;
             return {
                 statusCode: 201,
@@ -35,7 +36,7 @@ const leaveHandler = async (request,h) => {
             }
         }  
     } catch (e) {
-        throw e;
+        throw e
     }    
 
 }

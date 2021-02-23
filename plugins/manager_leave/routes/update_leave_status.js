@@ -1,6 +1,6 @@
 'use strict';
 const { employeeIdValidator } = require('../../employee/validations/put_emp');
-const {leaveHandler} = require('../handlers/post_leave_status');
+const {leaveHandler} = require('../handlers/update_leave_status');
 
 
 module.exports = {
@@ -8,7 +8,7 @@ module.exports = {
     path: '/manager/leave/{empId}',
     handler: leaveHandler,
     options: {
-        auth: false,
+        auth: 'jwt',
         validate: {
             params: employeeIdValidator
         }

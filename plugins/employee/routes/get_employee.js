@@ -8,8 +8,8 @@ module.exports = {
     path: '/employee/{empId}',
     handler: employeeHandler,
     options: {
-            auth: false,
-            validate: {
+        auth: 'jwt',
+        validate: {
             params: employeeDetailValidator,
         }
     },

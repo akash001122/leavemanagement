@@ -7,6 +7,6 @@ module.exports = {
     path: '/manager/leave',
     handler: leaveHandler,
     options: {
-        auth: false
+        auth: 'jwt'
     },
 };

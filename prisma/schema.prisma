@@ -1,66 +1,62 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
+model userlogin {
+  id       Int      @id @default(autoincrement())
+  username String   @unique
+  password String
+  role     ERole    @default(EMPLOYEE)
+  empid    Int
+  emp      employee @relation(fields: [empid], references: [id])
 }
 
-model Userlogin {
-  id            Int       @id @default(autoincrement())
-  userName      String    @unique
-  password      String    
-  role          ERole     @default(EMPLOYEE)
-  empId         Int
-  emp           Employee @relation(fields: [empId],references:[id])
+model employee {
+  id              Int         @id @default(autoincrement())
+  firstname       String
+  lastname        String
+  email           String      @unique
+  mobile          String
+  roledescription String
+  valid           Boolean     @default(true)
+  depid           Int
+  dept            department  @relation(fields: [depid], references: [id])
+  leavehistory    leave[]
+  userlogin       userlogin[]
 }
+
+model department {
+  id       Int        @id @default(autoincrement())
+  name     String     @unique
+  manager  String
+  visible  Boolean    @default(true)
+  employee employee[]
+}
+
+model leave {
+  id               Int       @id @default(autoincrement())
+  employeeid       Int
+  leavetype        LeaveType @default(OTHERS)
+  startdate        DateTime
+  enddate          DateTime
+  leavedescription String
+  valid            Boolean   @default(true)
+  leavetimestamp   DateTime  @default(now())
+  leavestatus      Status    @default(PENDING)
+  statustimestamp  DateTime? @updatedAt
+  totalleavesleft  Int       @default(20)
+  employee         employee  @relation(fields: [employeeid], references: [id])
+}
+
 enum ERole {
   HR
   MANAGER
   EMPLOYEE
-}
-
-
-
-
-
-
-model Employee {
-  id              Int       @id @default(autoincrement())
-  firstName       String    
-  lastName        String
-  email           String    @unique
-  mobile          String
-  roleDescription String
-  valid           Boolean   @default(true)
-  depId           Int
-  dept            Department  @relation(fields: [depId], references:[id])
-  leaveHistory    Leave[]
-}
-
-model Department {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  manager   String
-}
-
-model Leave {
-  id                Int       @id @default(autoincrement())
-  employeeId        Int
-  employee          Employee  @relation(fields: [employeeId],references:[id])
-  leaveType         LeaveType @default(OTHERS)
-  startDate         DateTime
-  endDate           DateTime
-  leaveDescription  String
-  valid             Boolean   @default(true)
-  leaveTimeStamp    DateTime  @default(now())
-  leaveStatus       Status    @default(PENDING)
-  statusTimeStamp   DateTime  @updatedAt()
-  totalLeavesLeft   Int       @default(20)
 }
 
 enum LeaveType {
