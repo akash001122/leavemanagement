@@ -1,6 +1,9 @@
 const Hapi = require('@hapi/hapi')
-const {PrismaClient} = require('@prisma/client')
 const prisma = require('./prismaplugin/prisma')
+const Inert = require('@hapi/inert');
+const Vision = require('@hapi/vision');
+const HapiSwagger = require('hapi-swagger');
+const Pack = require('./package');
 const {employeePlugin} = require('./plugins/employee/index');
 const { authPlugin } = require('./plugins/auth/index');
 const {leavePlugin} = require('./plugins/apply_leave/index');
@@ -14,14 +17,26 @@ const server = Hapi.server({
 });
 
 const init = async (server) => {
-    
-    await server.register([authPlugin, prisma, employeePlugin, leavePlugin, managerPlugin, hrPlugin, departmentPlugin]);
+    const swaggerOptions = {
+        info: {
+                title: 'Leave Management API Documentation',
+                version: Pack.version,
+            },
+        };
+    await server.register([Inert,Vision,
+        {
+            plugin: HapiSwagger,
+            options: swaggerOptions
+        },authPlugin, prisma, employeePlugin, leavePlugin, managerPlugin, hrPlugin, departmentPlugin]);
     await server.initialize();
     await server.route({
         method:'GET',
         path: '/',
         options:{
-            auth:false
+            auth:false,
+            description: 'Home Page',
+            notes: 'Welcome page',
+            tags: ['api'],
         },
         handler: (request,h)=>{
             return h.response({up:true});

@@ -17,16 +17,16 @@ const leaveHandler = async (request,h) => {
         var {leaveType, startDate, endDate,leaveDescription} = request.payload;
         startDate = Date.parse(startDate);
         endDate = Date.parse(endDate);
-        const leaveDetail = await prisma.$queryRaw`SELECT * FROM public.leave WHERE employeeid = ${det.empId} AND valid = true ORDER BY id;`;
+        const leaveDetail = await prisma.$queryRaw`;`;
         console.log(leaveDetail);
-        const createLeave = await prisma.$queryRaw`UPDATE public.leave SET leavetype = ${leaveType}, startdate = ${startDate}, enddate = ${endDate}, leavedescription = ${leaveDescription} WHERE id = ${leaveDetail[0].id};`;
+        const createLeave = await prisma.$queryRaw`UPDATE public.leave SET leavetype = ${leaveType}, startdate = ${startDate}, enddate = ${endDate}, leavedescription = ${leaveDescription} WHERE id = (SELECT id FROM public.leave WHERE employeeid = ${det.empId} AND valid = true AND enddate > ${Date.now()} ORDER BY id DESC FETCH FIRST ROW ONLY);`;
         return {
-            statusCode: 200,
+            statusCode: 201,
             message: "Leave Updated",
             data: {
-                leaveType:createLeave.leaveType,
-                from: createLeave.startDate,
-                to: createLeave.endDate,
+                leaveType:createLeave[0].leavetype,
+                from: createLeave[0].startdate,
+                to: createLeave[0].enddate,
                 jwt: tokenId
             }
         }

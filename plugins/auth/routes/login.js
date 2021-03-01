@@ -8,6 +8,9 @@ module.exports = {
     handler: loginHandler,
     options: {
         auth: false,
+        description: 'Login',
+        notes: 'Login through username and password',
+        tags: ['api'],
         validate: {
             payload: loginValidation,
         }

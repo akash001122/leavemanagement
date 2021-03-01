@@ -9,6 +9,9 @@ module.exports = {
     handler: leaveHandler,
     options: {
         auth: 'jwt',
+        description: 'Update leavestatus of Leaves of Employee',
+        notes: 'Approve or reject employee leaves by the employeeid passed through path which can be done only by manager',
+        tags: ['api'],
         validate: {
             params: employeeIdValidator
         }

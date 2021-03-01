@@ -7,6 +7,9 @@ module.exports = {
     path: '/leave',
     handler: leaveHandler,
     options: {
-        auth: 'jwt'
+        auth: 'jwt',
+        description: 'Get leave',
+        notes: 'Returns the leaves applied by the employee whose id is passed by jwt',
+        tags: ['api'],
     },
 };

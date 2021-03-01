@@ -7,6 +7,9 @@ module.exports = {
     path: '/leave',
     handler: leaveHandler,
     options: {
-        auth: 'jwt'
+        auth: 'jwt',
+        description: 'Delete leave',
+        notes: 'Updates the valid column of leave of an employee to false',
+        tags: ['api'],
     },
 };

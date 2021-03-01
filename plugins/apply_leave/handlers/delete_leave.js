@@ -16,10 +16,10 @@ const leaveHandler = async (request,h) => {
         const det = JSON.parse(tokenDetails);
         const valid = false;
 
-        const leaveDetail = await prisma.$queryRaw`SELECT * FROM public.leave WHERE employeeid = ${det.empId} AND valid = true ORDER BY id;`;
-        await prisma.$queryRaw`UPDATE public.leave SET valid=${valid} WHERE id = ${leaveDetail[0].id};`;
+        const leaveDetail = await prisma.$queryRaw`;`;
+        await prisma.$queryRaw`UPDATE public.leave SET valid=${valid} WHERE employeeid = ${det.empId} AND valid = true AND startdate > ${Date.now()} ORDER BY id DESC FETCH FIRST ROW ONLY;`;
         return {
-            statusCode: 204,
+            statusCode: 201,
             message: "Leave Deleted Successfully",
             data: {
                 leavehistory: leaveDetail[0],

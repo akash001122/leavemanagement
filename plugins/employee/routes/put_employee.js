@@ -10,6 +10,9 @@ module.exports = {
     handler: employeeHandler,
     options: {
         auth: 'jwt',
+        description: 'Update Employee',
+        notes: 'Updates employee details by the id passes through path which can be done only by hr',
+        tags: ['api'],
         validate: {
             payload: employeeDetailValidator,
             params: employeeIdValidator,

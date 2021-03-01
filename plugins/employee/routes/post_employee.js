@@ -9,6 +9,9 @@ module.exports = {
     handler: employeeHandler,
     options: {
         auth: 'jwt',
+        description: 'Create Employee',
+        notes: 'Creates an employee which can be done only by hr',
+        tags: ['api'],
         validate: {
             payload: employeeDetailValidator,
         }

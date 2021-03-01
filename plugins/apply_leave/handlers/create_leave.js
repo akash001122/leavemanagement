@@ -18,15 +18,16 @@ const leaveHandler = async (request,h) => {
         const {prisma} = request.server.app;
         startDate = Date.parse(startDate);
         endDate = Date.parse(endDate);
-    
-        const createLeave = await prisma.$executeRaw`INSERT INTO public.leave(employeeid, leavetype, startdate, enddate, leavedescription) VALUES (${det.empId},${leaveType},${startDate},${endDate},${leaveDescription});`;
+        console.log("hello")
+        const createLeave = await prisma.$queryRaw`INSERT INTO public.leave (employeeid, leavetype, startdate, enddate, leavedescription) VALUES (${det.empId},${leaveType},${startDate},${endDate},${leaveDescription}) RETURNING *;`;
+        console.log(createLeave)
         return {
             statusCode: 201,
             message: "Leave Applied",
             data: {
-                leaveType:createLeave.leaveType,
-                from: createLeave.startDate,
-                to: createLeave.endDate,
+                leaveType:createLeave[0].leavetype,
+                from: createLeave[0].startdate,
+                to: createLeave[0].enddate,
                 jwt: tokenId
             }
         }

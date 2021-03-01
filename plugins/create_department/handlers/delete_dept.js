@@ -16,11 +16,14 @@ const deptHandler = async (request,h) => {
             const {prisma} = request.server.app;
             const name = request.params.name;
             await prisma.$queryRaw`UPDATE public.department SET visible = false WHERE name = ${name};`;    
-            return h.response().code(204);  
-        }else{
-            return{
-                Message: "Access Denied"
+            return {
+                statusCode: 201,
+                message: `${name} Department deleted`,
+                jwt: tokenId
             }
+            
+        }else{
+            return Boom.unauthorized("Unauthorized");
         }
 
     }catch(e){

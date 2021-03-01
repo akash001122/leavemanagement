@@ -12,22 +12,20 @@ const leaveHandler = async (request,h) => {
         const {tokenId} = request.auth.credentials;
         const tokenDetails = await getAsync(tokenId);
         const det = JSON.parse(tokenDetails);
-        if(det.role === "HR" || det.role ==="MANAGER"){
+        if(det.role === "HR"){
             const {prisma} = request.server.app;
             const id = request.params.empId;
-            const leaveDetail = await prisma.$queryRaw`SELECT * FROM public.leave WHERE employeeid = ${id};`;
+            const leaveDetail = await prisma.$queryRaw`SELECT e.firstname ||' '|| e.lastname AS name, d.name AS deptname, l.leavetype, l.startdate, l.enddate, l.leavedescription, l.leavetimestamp, l.leavestatus, l.statustimestamp, l.totalleavesleft  FROM public.employee e INNER JOIN public.leave l ON e.id = l.employeeid INNER JOIN department d ON e.depid = d.id WHERE e.id = ${id} ORDER BY l.id DESC;`;
             return {
                 statusCode: 200,
                 message: "Leave Details fetched Successfully",
                 data: {
                     leavehistory: {leaveDetail},
-                    jwt: request.auth.credentials
+                    jwt: tokenId
                 }
             }
         }else{
-            return{
-                Message: "Access Denied"
-            }
+            return Boom.unauthorized("Unauthorized")
         }  
 
 

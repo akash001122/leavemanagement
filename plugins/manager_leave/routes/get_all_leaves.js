@@ -1,5 +1,5 @@
 'use strict';
-const {leaveHandler} = require('../../hr_leave/handlers/get_all_leaves');
+const {leaveHandler} = require('../../manager_leave/handlers/get_all_leaves');
 
 
 module.exports = {
@@ -7,6 +7,9 @@ module.exports = {
     path: '/manager/leave',
     handler: leaveHandler,
     options: {
-        auth: 'jwt'
+        auth: 'jwt',
+        description: 'Get Leaves of all Employees',
+        notes: 'Fetches employee leave details which can be done only by manager',
+        tags: ['api'],
     },
 };

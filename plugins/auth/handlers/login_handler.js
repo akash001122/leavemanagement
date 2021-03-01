@@ -19,17 +19,19 @@ const loginHandler = async function(request,h) {
     const {userName, password} = request.payload;
     const {prisma} = request.server.app;
     try{
-        const fetchUser = await prisma.$queryRaw`SELECT * FROM public.userlogin WHERE username = ${userName};`;
-        if(userName === fetchUser[0].username){
-            const match = await bcrypt.compare(password,fetchUser[0].password);
+        const fetchEmployee = await prisma.$queryRaw`SELECT e.id AS employeeid,u.id as userid, e.depid, u.username,u.password,u.role FROM public.employee e INNER JOIN public.userlogin u ON e.id = u.empid WHERE u.username = ${userName};`
+        console.log(fetchEmployee[0])
+        if(userName === fetchEmployee[0].username){
+            const match = await bcrypt.compare(password,fetchEmployee[0].password);
             if(match){
                 tokenId = uuid.v4();
                 const jwtToken = generateAuthToken(tokenId);
                 const credentials = {
                     tokenId,
-                    userId: fetchUser[0].id,
-                    empId: fetchUser[0].empid,
-                    role: fetchUser[0].role,
+                    userId: fetchEmployee[0].userid,
+                    empId: fetchEmployee[0].employeeid,
+                    dept: fetchEmployee[0].depid,
+                    role: fetchEmployee[0].role,
                     isValid: true
                 }
                 await setAsync(tokenId,JSON.stringify(credentials))
@@ -37,10 +39,10 @@ const loginHandler = async function(request,h) {
                     statusCode: 200,
                     message: "Login Successfull",
                     data: {
-                        id: fetchUser[0].id,
-                        empId: fetchUser[0].empid,
-                        userName: fetchUser[0].username,
-                        role: fetchUser[0].role,
+                        id: fetchEmployee[0].userid,
+                        empId: fetchEmployee[0].employeeid,
+                        userName: fetchEmployee[0].username,
+                        role: fetchEmployee[0].role,
                         jwt: jwtToken
                     }
                 }

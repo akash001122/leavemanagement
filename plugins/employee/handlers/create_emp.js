@@ -35,14 +35,15 @@ const employeeHandler = async (request,h) => {
             createEmp = await prisma.$queryRaw`INSERT INTO public.employee(firstname, lastname, email, mobile, roledescription, depid) VALUES (${firstName},${lastName},${email},${mobile},${roleDescription},${depId}) RETURNING *;`;
             await prisma.$queryRaw`INSERT INTO public.userlogin(username, password, role, empid) VALUES (${userName},${password},${role},${createEmp[0].id});`;
             
-            return h.response(createEmp).code(201);
+            return {
+                statusCode: 201,
+                message: `Employee ${firstName} created`,
+                data: createEmp,
+                jwt: tokenId
+            };
         }else{
-            return{
-                Message: "Access Denied"
-            }
-        }
-
-
+            return Boom.unauthorized("Unauthorized")
+        }  
     }catch(e){
         throw e;
     }

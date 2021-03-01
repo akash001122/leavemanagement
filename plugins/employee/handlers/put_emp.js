@@ -33,12 +33,15 @@ const employeeHandler = async (request,h) => {
             var updateEmp = await prisma.$queryRaw`UPDATE public.employee SET firstname = ${firstName}, lastname = ${lastName}, email = ${email}, mobile = ${mobile}, roledescription = ${roleDescription}, depid = ${depId} WHERE id = ${empId};`;
             var updateUser = await prisma.$queryRaw`UPDATE public.userlogin SET username = ${userName}, password = ${password}, role = ${role} WHERE empid = ${empId};`;
            
-            return h.response("ok").code(201);
+            return {
+                statusCode: 201,
+                message: `Employee ${firstName} updated`,
+                data: updateEmp,
+                jwt: tokenId
+            };
         }else{
-            return{
-                Message: "Access Denied"
-            }
-        }
+            return Boom.unauthorized("Unauthorized")
+        }  
     }catch(e){
         throw e;
     }

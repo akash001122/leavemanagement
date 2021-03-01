@@ -15,7 +15,7 @@ const leaveHandler = async (request,h) => {
         const det = JSON.parse(tokenDetails);
         const {prisma} = request.server.app;
     
-        const leaveDetail = await prisma.$queryRaw`SELECT * FROM public.leave WHERE employeeid = ${det.empId} AND valid = true ORDER BY id;`;
+        const leaveDetail = await prisma.$queryRaw`SELECT e.firstname ||' '|| e.lastname AS name, d.name AS deptname, l.leavetype, l.startdate, l.enddate, l.leavedescription, l.leavetimestamp, l.leavestatus, l.statustimestamp, l.totalleavesleft  FROM public.employee e INNER JOIN public.leave l ON e.id = l.employeeid INNER JOIN department d ON e.depid = d.id WHERE l.employeeid = ${det.empId} AND l.valid = true ORDER BY l.id;`;
         return {
             statusCode: 200,
             message: "Leave Details fetched Successfully",

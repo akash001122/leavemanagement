@@ -7,6 +7,9 @@ module.exports = {
     path: '/hr/leave',
     handler: leaveHandler,
     options: {
-        auth: 'jwt'
+        auth: 'jwt',
+        description: 'Get Leaves of all Employees',
+        notes: 'Fetches employees leave details which can be done only by hr',
+        tags: ['api'],
     },
 };

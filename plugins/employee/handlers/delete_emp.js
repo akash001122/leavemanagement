@@ -17,12 +17,14 @@ const employeeHandler = async (request,h)=>{
             const empId = request.params.empId;    
             const valid = false
             await prisma.$queryRaw`UPDATE public.employee SET valid = ${valid} WHERE id = ${empId};`;
-            return h.response("ok").code(204);
+            return {
+                statusCode: 201,
+                message: `Employee deleted`,
+                jwt: tokenId
+            };
         }else{
-            return{
-                Message: "Access Denied"
-            }
-        }
+            return Boom.unauthorized("Unauthorized")
+        }  
     }catch(e){
         throw e;
     }

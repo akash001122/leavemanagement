@@ -9,6 +9,9 @@ module.exports = {
     handler: leaveHandler,
     options: {
         auth: 'jwt',
+        description: 'Apply Leave',
+        notes: 'Creates a record of leave of the employee whose id is passed by jwt',
+        tags: ['api'],
         validate: {
             payload: leaveDetailValidator,
         }

@@ -8,5 +8,8 @@ module.exports = {
     handler: employeeHandler,
     options:{
         auth: 'jwt',
+        description: 'Get All Employees',
+        notes: 'Fetch all employees details which can be done only by hr',
+        tags: ['api'],
     }
 };

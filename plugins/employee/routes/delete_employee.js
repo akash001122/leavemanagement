@@ -10,6 +10,9 @@ module.exports = {
     handler: employeeHandler,
      options: {
          auth: 'jwt',
+         description: 'Delete Employee',
+         notes: 'Updates valid column of employee so that it the row becomes inactive, which can be done only by hr',
+         tags: ['api'],
          validate: {
              params: employeeDetailValidator,
          }

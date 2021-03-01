@@ -1,6 +1,7 @@
 'use strict';
 const { promisify } = require("util");
 const redis = require("redis");
+const { Boom } = require("@hapi/boom");
 const client = redis.createClient();
 const getAsync = promisify(client.get).bind(client);
 client.on("error", function(error) {
@@ -16,11 +17,13 @@ const deptHandler = async (request,h) => {
             const {prisma} = request.server.app;
             const {name,manager} = request.payload;
             await prisma.$queryRaw`INSERT INTO public.department(name,manager) VALUES (${name},${manager});`;    
-            return h.response().code(201);
+            return {
+                statusCode: 201,
+                message: `${name} Department created`,
+                jwt: tokenId
+            };
         }else{
-            return{
-                Message: "Access Denied"
-            }
+            return Boom.unauthorized("Unauthorized")
         }  
     }catch(e){
         throw e;

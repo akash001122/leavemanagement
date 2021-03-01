@@ -19,11 +19,14 @@ const deptHandler = async (request,h) => {
             const manager = request.payload.manager
             const name = request.params.name;
             await prisma.$queryRaw`UPDATE public.department SET name = ${newName},manager = ${manager} WHERE  name = ${name} AND visible = true;`;    
-            return h.response().code(200);
-        }else{
-            return{
-                Message: "Access Denied"
+            return {
+                statusCode: 201,
+                message: `${name} Department updated`,
+                jwt: tokenId
             }
+            
+        }else{
+            return Boom.unauthorized("Unauthorized");
         }
 
     }catch(e){

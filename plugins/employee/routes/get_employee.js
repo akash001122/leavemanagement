@@ -9,6 +9,9 @@ module.exports = {
     handler: employeeHandler,
     options: {
         auth: 'jwt',
+        description: 'Get Employee',
+        notes: 'Fetches employee details by the employeeid passed in path which can be done only by hr',
+        tags: ['api'],
         validate: {
             params: employeeDetailValidator,
         }

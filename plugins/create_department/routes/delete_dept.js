@@ -9,6 +9,9 @@ module.exports = {
     handler: deptHandler,
     options:{
         auth: 'jwt',
+        description: 'Delete department',
+        notes: 'Updates department so that its visibility is inactive which can be done only by hr',
+        tags: ['api'],
         validate: {
             params: deptValidation
         }
