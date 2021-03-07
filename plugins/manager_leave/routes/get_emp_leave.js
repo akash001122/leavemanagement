@@ -1,5 +1,6 @@
 'use strict';
-const { employeeIdValidator } = require('../../employee/validations/put_emp');
+const Joi = require('joi');
+const { employeeLeaveValidator } = require('../../employee/validations/get_emp');
 const {leaveHandler} = require('../../manager_leave/handlers/get_emp_leave');
 
 
@@ -13,7 +14,9 @@ module.exports = {
         notes: 'Fetches employee leave details by the employeeid passed through path which can be done only by manager',
         tags: ['api'],
         validate: {
-            params: employeeIdValidator
+            params: Joi.object({
+                empId: Joi.number().integer()
+            })
         }
     },
 };

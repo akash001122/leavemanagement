@@ -13,7 +13,7 @@ const { departmentPlugin } = require('./plugins/create_department');
 
 const server = Hapi.server({
     port: 3000,
-    host: 'localhost',
+    // host: 'localhost',
 });
 
 const init = async (server) => {
@@ -22,6 +22,15 @@ const init = async (server) => {
                 title: 'Leave Management API Documentation',
                 version: Pack.version,
             },
+            securityDefinitions:{
+                Bearer: {
+                    type: 'apiKey',
+                    name: 'Authorization',
+                    in: 'header',
+                    'x-keyPrefix': 'Bearer'
+                }
+            },
+            security: [{ Bearer: []  }]
         };
     await server.register([Inert,Vision,
         {

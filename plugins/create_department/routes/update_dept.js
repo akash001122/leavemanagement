@@ -5,7 +5,7 @@ const {deptBodyValidation,deptValidation} = require('../validations/create_dept'
 
 module.exports = {
     method: 'PUT',
-    path: '/department/{name}',
+    path: '/department/{id}',
     handler: deptHandler,
     options:{
         auth: 'jwt',

@@ -1,5 +1,6 @@
 'use strict';
 const { promisify } = require("util");
+const Boom  = require("@hapi/boom");
 const redis = require("redis");
 const client = redis.createClient();
 const getAsync = promisify(client.get).bind(client);
@@ -13,15 +14,18 @@ const deptHandler = async (request,h) => {
         const {tokenId} = request.auth.credentials;
         const tokenDetails = await getAsync(tokenId);
         const det = JSON.parse(tokenDetails);
-        if(det.role === "HR"){
+        if(det.role === "HR" && det.isValid){
             const {prisma} = request.server.app;
-            const newName = request.payload.name;
-            const manager = request.payload.manager
-            const name = request.params.name;
-            await prisma.$queryRaw`UPDATE public.department SET name = ${newName},manager = ${manager} WHERE  name = ${name} AND visible = true;`;    
+            const id = request.params.id;
+            const depDetails = await prisma.$queryRaw`SELECT * FROM public.department WHERE id = ${id};`;
+            const newName = request.payload.name ? request.payload.name : depDetails[0].name;
+            const visibility = request.payload.visible !== undefined? request.payload.visible : depDetails[0].visible;
+            await prisma.$queryRaw`UPDATE public.department SET name = ${newName}, visible = ${visibility} WHERE  id = ${id};`;    
             return {
                 statusCode: 201,
-                message: `${name} Department updated`,
+                depId: id,
+                visibility: visibility,
+                message: `${newName} Department updated`,
                 jwt: tokenId
             }
             

@@ -2,6 +2,7 @@
 
 const { promisify } = require("util");
 const redis = require("redis");
+const Boom  = require("@hapi/boom");
 const client = redis.createClient();
 const getAsync = promisify(client.get).bind(client);
 client.on("error", function(error) {
@@ -11,25 +12,42 @@ client.on("error", function(error) {
 const leaveHandler = async (request,h) => {
     try{
         const {prisma} = request.server.app;
+        const leaveId = request.params.leaveId;
+        const getLeave = await prisma.$queryRaw`SELECT * FROM public.leave WHERE id = ${leaveId}`;
+        const leaveType = request.payload.leaveType ? request.payload.leaveType : getLeave[0].leavetype;
+        const startDate = new Date(request.payload.startDate ? request.payload.startDate : getLeave[0].startdate);
+        const endDate = new Date(request.payload.endDate ? request.payload.endDate : getLeave[0].enddate);
+        const leaveDescription = request.payload.leaveDescription ? request.payload.leaveDescription : getLeave[0].leavedescription;
         const {tokenId} = request.auth.credentials;
         const tokenDetails = await getAsync(tokenId);
         const det = JSON.parse(tokenDetails);
-        var {leaveType, startDate, endDate,leaveDescription} = request.payload;
-        startDate = Date.parse(startDate);
-        endDate = Date.parse(endDate);
-        const leaveDetail = await prisma.$queryRaw`;`;
-        console.log(leaveDetail);
-        const createLeave = await prisma.$queryRaw`UPDATE public.leave SET leavetype = ${leaveType}, startdate = ${startDate}, enddate = ${endDate}, leavedescription = ${leaveDescription} WHERE id = (SELECT id FROM public.leave WHERE employeeid = ${det.empId} AND valid = true AND enddate > ${Date.now()} ORDER BY id DESC FETCH FIRST ROW ONLY);`;
-        return {
-            statusCode: 201,
-            message: "Leave Updated",
-            data: {
-                leaveType:createLeave[0].leavetype,
-                from: createLeave[0].startdate,
-                to: createLeave[0].enddate,
-                jwt: tokenId
+        if(det.isValid){
+            if(getLeave[0].leavestatus ==="PENDING"){
+                const updateLeave = await prisma.$queryRaw`UPDATE public.leave SET leavetype = ${leaveType},startdate = ${startDate}, enddate = ${endDate}, leavedescription = ${leaveDescription} WHERE id = ${leaveId} AND employeeid = ${det.empId};`;
+                return {
+                    statusCode: 201,
+                    message: "Leave Updated",
+                    data: {
+                        leaveId,
+                        empId: det.empId,
+                        leaveType: leaveType,
+                        from: startDate,
+                        to: endDate,
+                        leaveDescription,
+                        jwt: tokenId
+                    }
+                }
+            }else{
+                return{
+                    statusCode: 403,
+                    message: "Cannot Update the Leave Which is Approved or Rejected"
+                }
             }
+        }else{
+            return Boom.unauthorized("Unauthorized");
         }
+
+        
     }catch(e){
         throw e;
     }

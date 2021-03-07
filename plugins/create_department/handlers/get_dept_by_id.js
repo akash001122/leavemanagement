@@ -1,7 +1,7 @@
 'use strict';
 const { promisify } = require("util");
-const redis = require("redis");
 const Boom  = require("@hapi/boom");
+const redis = require("redis");
 const client = redis.createClient();
 const getAsync = promisify(client.get).bind(client);
 client.on("error", function(error) {
@@ -14,25 +14,20 @@ const deptHandler = async (request,h) => {
         const tokenDetails = await getAsync(tokenId);
         const det = JSON.parse(tokenDetails);
         if(det.role === "HR" && det.isValid === true){
-            //const {prisma} = request.server.app;
-            const {name} = request.payload;
-
-            console.log(name)
-
-            const { PrismaClient } = require('@prisma/client');
-            const prisma = new PrismaClient()
-            
-            var deptId = await prisma.$queryRaw`INSERT INTO public.department(name) VALUES (${name}) RETURNING *;`; 
-            console.log(deptId[0].id);   
+            const {prisma} = request.server.app;
+            const id = request.params.id;
+            const department = await prisma.$queryRaw`SELECT * FROM public.department WHERE id = ${id};`;    
             return {
-                statusCode: 201,
-                message: `${name} Department created`,
-                deptId: deptId[0].id,
+                statusCode: 200,
+                message: `Department Fetched Successfully`,
+                data: department[0],
                 jwt: tokenId
-            };
+            }
+            
         }else{
-            return Boom.unauthorized("Unauthorized")
-        }  
+            return Boom.unauthorized("Unauthorized");
+        }
+
     }catch(e){
         throw e;
     }

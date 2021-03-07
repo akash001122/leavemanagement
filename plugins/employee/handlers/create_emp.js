@@ -1,6 +1,7 @@
 'use strict';
 const { promisify } = require("util");
 const redis = require("redis");
+const Boom  = require("@hapi/boom");
 const client = redis.createClient();
 const getAsync = promisify(client.get).bind(client);
 client.on("error", function(error) {
@@ -14,7 +15,7 @@ const employeeHandler = async (request,h) => {
         const {tokenId} = request.auth.credentials;
         const tokenDetails = await getAsync(tokenId);
         const det = JSON.parse(tokenDetails);
-        if(det.role === "HR"){
+        if(det.role === "HR" && det.isValid){
             const firstName = request.payload.firstName;
             const lastName = request.payload.lastName;
             const email = request.payload.email;

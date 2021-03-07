@@ -1,11 +1,11 @@
 'use strict';
-const { employeeIdValidator } = require('../../employee/validations/put_emp');
+const { leaveIdValidator ,leavePayloadValidator} = require('../validations/post_leave_status');
 const {leaveHandler} = require('../handlers/update_leave_status');
 
 
 module.exports = {
     method: 'PUT',
-    path: '/manager/leave/{empId}',
+    path: '/manager/leave/{leaveId}',
     handler: leaveHandler,
     options: {
         auth: 'jwt',
@@ -13,7 +13,8 @@ module.exports = {
         notes: 'Approve or reject employee leaves by the employeeid passed through path which can be done only by manager',
         tags: ['api'],
         validate: {
-            params: employeeIdValidator
+            params: leaveIdValidator,
+            payload: leavePayloadValidator
         }
     },
 };

@@ -33,7 +33,6 @@ model employee {
 model department {
   id       Int        @id @default(autoincrement())
   name     String     @unique
-  manager  String
   visible  Boolean    @default(true)
   employee employee[]
 }

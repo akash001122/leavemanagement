@@ -1,27 +1,29 @@
 'use strict';
 const { promisify } = require("util");
+const  Boom  = require("@hapi/boom");
 const redis = require("redis");
 const client = redis.createClient();
-const Boom  = require("@hapi/boom");
 const getAsync = promisify(client.get).bind(client);
 client.on("error", function(error) {
     console.error(error);
   });
+const bcrypt = require('bcrypt');
 
-const employeeHandler = async (request,h)=>{
+const employeeHandler = async (request,h) => {
     try{
         const {tokenId} = request.auth.credentials;
         const tokenDetails = await getAsync(tokenId);
         const det = JSON.parse(tokenDetails);
         if(det.role === "HR" && det.isValid){
             const {prisma} = request.server.app;
-            const empId = request.params.empId;    
-            const valid = false
-            await prisma.$queryRaw`UPDATE public.employee SET valid = ${valid} WHERE id = ${empId};`;
+            const empId = request.params.empId;
+            const password = request.payload.password;
+            const hashPassword = await bcrypt.hash(password,10);
+            await prisma.$queryRaw`UPDATE public.userlogin SET password = ${hashPassword} WHERE empid = ${empId};`;
             return {
                 statusCode: 201,
                 empId,
-                message: `Employee deleted`,
+                message: `Employee password updated`,
                 jwt: tokenId
             };
         }else{
@@ -31,6 +33,8 @@ const employeeHandler = async (request,h)=>{
         throw e;
     }
 }
-
 exports.employeeHandler = employeeHandler;
+
+
+
 

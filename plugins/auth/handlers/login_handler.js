@@ -20,7 +20,6 @@ const loginHandler = async function(request,h) {
     const {prisma} = request.server.app;
     try{
         const fetchEmployee = await prisma.$queryRaw`SELECT e.id AS employeeid,u.id as userid, e.depid, u.username,u.password,u.role FROM public.employee e INNER JOIN public.userlogin u ON e.id = u.empid WHERE u.username = ${userName};`
-        console.log(fetchEmployee[0])
         if(userName === fetchEmployee[0].username){
             const match = await bcrypt.compare(password,fetchEmployee[0].password);
             if(match){

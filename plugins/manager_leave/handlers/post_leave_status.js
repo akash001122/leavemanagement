@@ -1,5 +1,6 @@
 'use strict';
 const { promisify } = require("util");
+const Boom  = require("@hapi/boom");
 const redis = require("redis");
 const client = redis.createClient();
 const getAsync = promisify(client.get).bind(client);
@@ -12,15 +13,16 @@ const leaveHandler = async (request,h) => {
         const {tokenId} = request.auth.credentials;
         const tokenDetails = await getAsync(tokenId);
         const det = JSON.parse(tokenDetails);
-        if(det.role === "MANAGER"){
+        if(det.role === "MANAGER" && det.isValid){
             const {prisma} = request.server.app;
-            const id = request.params.empId
+            const id = request.params.leaveId
             const {leaveStatus} = request.payload;
-            const createLeave = await prisma.$queryRaw`UPDATE public.leave SET leavestatus= ${leaveStatus}, statustimestamp = ${Date.now()} WHERE id = (SELECT id FROM public.leave WHERE employeeid = ${id} AND valid = true AND leaveStatus = 'PENDING' ORDER BY id DESC FETCH FIRST ROW ONLY);`;
+            const createLeave = await prisma.$queryRaw`UPDATE public.leave SET leavestatus= ${leaveStatus}, statustimestamp = ${Date.now()} WHERE id = ${id};`;
             return {
                 statusCode: 201,
                 message: `LEAVE ${leaveStatus}`,
                 data: {
+                    leaveId: id,
                     leaveType:createLeave.leaveType,
                     from: createLeave.startDate,
                     to: createLeave.endDate,

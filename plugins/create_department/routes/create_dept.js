@@ -13,7 +13,7 @@ module.exports = {
         notes: 'Creates new department which can be done only by hr',
         tags: ['api'],
         validate:{
-            payload: deptBodyValidation
+            payload: deptBodyValidation,
         }
     }
 };

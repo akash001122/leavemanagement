@@ -9,7 +9,6 @@ exports.employeeDetailValidator = Joi.object({
     mobile: Joi.string(),
     roleDescription: Joi.string(),
     userName: Joi.string(),
-    password: Joi.string(),
     role: Joi.string(),
     depId: Joi.number().integer(),
 })

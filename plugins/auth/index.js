@@ -14,9 +14,12 @@ client.on("error", function(error) {
 
   const validate = async function (decoded) {
     try {
-        const userDetails = await getAsync(decoded.tokenId)
+        const userDetails = await getAsync(decoded.tokenId);
         if(!userDetails){
-            return{isValid: false, errorMessage: "Invalid Token"};
+            return{
+                statusCode: 401,
+                isValid: false, 
+                errorMessage: "Invalid Token"};
         }else{
             return{
                 isValid: true,
@@ -43,6 +46,8 @@ exports.authPlugin = {
                   validate
             });
             server.route(require('./routes/login'));
+            server.route(require('./routes/logout'));
+
     } 
 };
 

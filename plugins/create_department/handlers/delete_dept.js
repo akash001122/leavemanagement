@@ -1,5 +1,6 @@
 'use strict';
 const { promisify } = require("util");
+const Boom  = require("@hapi/boom");
 const redis = require("redis");
 const client = redis.createClient();
 const getAsync = promisify(client.get).bind(client);
@@ -12,13 +13,14 @@ const deptHandler = async (request,h) => {
         const {tokenId} = request.auth.credentials;
         const tokenDetails = await getAsync(tokenId);
         const det = JSON.parse(tokenDetails);
-        if(det.role === "HR"){
+        if(det.role === "HR" && det.isValid === true){
             const {prisma} = request.server.app;
-            const name = request.params.name;
-            await prisma.$queryRaw`UPDATE public.department SET visible = false WHERE name = ${name};`;    
+            const id = request.params.id;
+            await prisma.$queryRaw`UPDATE public.department SET visible = false WHERE id = ${id};`;  
             return {
                 statusCode: 201,
-                message: `${name} Department deleted`,
+                depId: id,
+                message: `Department deleted`,
                 jwt: tokenId
             }
             

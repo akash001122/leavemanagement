@@ -1,18 +1,18 @@
 'use strict';
-const {deptHandler} = require('../handlers/delete_dept');
+const {deptHandler} = require('../handlers/get_dept_by_id');
 const {deptValidation} = require('../validations/create_dept');
 
 
 module.exports = {
-    method: 'DELETE',
+    method: 'GET',
     path: '/department/{id}',
     handler: deptHandler,
     options:{
         auth: 'jwt',
-        description: 'Delete department',
-        notes: 'Updates department so that its visibility is inactive which can be done only by hr',
+        description: 'Get department by id',
+        notes: 'Fetches department details which can be done only by hr',
         tags: ['api'],
-        validate: {
+        validate:{
             params: deptValidation
         }
     }

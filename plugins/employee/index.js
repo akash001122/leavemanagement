@@ -9,6 +9,8 @@ exports.employeePlugin = {
             server.route(require('./routes/put_employee'));
             server.route(require('./routes/delete_employee'));
             server.route(require('./routes/get_all_employees'));
+            server.route(require('./routes/reset_password'));
+
         } catch (e) {
             throw e;
         }
