@@ -1,32 +1,15 @@
 'use strict';
-const { promisify } = require("util");
-const redis = require("redis");
-const client = redis.createClient();
-const Boom  = require("@hapi/boom");
-const getAsync = promisify(client.get).bind(client);
-client.on("error", function(error) {
-    console.error(error);
-  });
 
 const employeeHandler = async (request,h)=>{
     try{
-        const {tokenId} = request.auth.credentials;
-        const tokenDetails = await getAsync(tokenId);
-        const det = JSON.parse(tokenDetails);
-        if(det.role === "HR" && det.isValid){
             const {prisma} = request.server.app;
-            const empId = request.params.empId;    
-            const valid = false
-            await prisma.$queryRaw`UPDATE public.employee SET valid = ${valid} WHERE id = ${empId};`;
+            const employeeId = request.query.employeeId;    
+            await prisma.$queryRaw`UPDATE public.employee SET visible = false WHERE id = ANY(${employeeId});`;
             return {
                 statusCode: 201,
-                empId,
-                message: `Employee deleted`,
-                jwt: tokenId
+                employeeId,
+                message: `Employee deleted`
             };
-        }else{
-            return Boom.unauthorized("Unauthorized")
-        }  
     }catch(e){
         throw e;
     }

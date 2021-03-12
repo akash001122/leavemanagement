@@ -1,5 +1,5 @@
 const {loginHandler} = require('../handlers/login_handler');
-const {loginValidation} = require('../validations/login_validation');
+const loginValidation = require('../validations/login_validation');
 
 
 module.exports = {

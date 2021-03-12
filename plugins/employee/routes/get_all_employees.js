@@ -11,5 +11,11 @@ module.exports = {
         description: 'Get All Employees',
         notes: 'Fetch all employees details which can be done only by hr',
         tags: ['api'],
+        plugins: {
+            'hapiAuthorization': {
+                roles: ['HR','MANAGER']
+            }
+        }
     }
+
 };

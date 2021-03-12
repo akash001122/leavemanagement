@@ -1,23 +1,26 @@
 'use strict';
-const{employeeIdValidator} = require('../validations/put_emp');
+const employeeIdValidator = require('../validations/employee_id');
+const passwordValidator = require('../validations/password');
 const {employeeHandler} = require('../handlers/reset_password.js');
-const Joi = require('joi');
-
 
 module.exports = {
     method: 'PUT',
-    path: '/password/{empId}',
-    handler: employeeHandler,
+    path: '/password/{employeeId}',
+
     options: {
         auth: 'jwt',
         description: 'Reset Password',
         notes: 'Resets password of an employee by the id passed through path which can be done only by hr',
         tags: ['api'],
+        plugins: {
+            'hapiAuthorization': {
+                roles: ['HR']
+            }
+        },
         validate: {
-            payload: Joi.object({
-                password: Joi.string().required()
-            }),
-            params: employeeIdValidator,
-        }
-    },
+            payload: passwordValidator,
+            params: employeeIdValidator
+        },
+        handler: employeeHandler
+    }
 };

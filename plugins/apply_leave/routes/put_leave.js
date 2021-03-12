@@ -1,7 +1,7 @@
 'use strict';
 const {leaveHandler} = require('../handlers/put_leave');
-const {leaveDetailValidator} = require('../validations/put_leave');
-const {leaveIdValidator} = require('../validations/put_leave');
+const leaveDetailValidator = require('../validations/updateLeavePayload');
+const leaveIdValidator = require('../validations/leaveId');
 
 
 
@@ -18,6 +18,11 @@ module.exports = {
         validate: {
             payload: leaveDetailValidator,
             params: leaveIdValidator
+        },
+        plugins: {
+            'hapiAuthorization': {
+                roles: ['HR', 'MANAGER','EMPLOYEE']
+            }
         }
-    },
+    }
 };

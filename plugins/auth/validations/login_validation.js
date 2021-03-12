@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 
-exports.loginValidation =  Joi.object({
+module.exports =  Joi.object({
         userName : Joi.string().required(),
         password : Joi.string().required(),
 });

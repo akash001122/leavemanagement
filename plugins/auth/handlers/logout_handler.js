@@ -12,13 +12,12 @@ const logoutHandler = async function(request,h){
     try{
         const {tokenId} = request.auth.credentials;
         const tokenDetails = await getAsync(tokenId);
-        const det = JSON.parse(tokenDetails);
+        const parsedTokenDetails = JSON.parse(tokenDetails);
         const credentials = {
-            tokenId,
-            userId: det.userid,
-            empId: det.employeeid,
-            dept: det.depid,
-            role: det.role,
+            userId: parsedTokenDetails.userid,
+            employeeId: parsedTokenDetails.employeeid,
+            departmentId: parsedTokenDetails.departmentid,
+            role: parsedTokenDetails.role,
             isValid: false
         }
         await setAsync(tokenId,JSON.stringify(credentials))

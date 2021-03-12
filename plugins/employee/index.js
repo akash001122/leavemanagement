@@ -1,4 +1,6 @@
 'use strict';
+const  { getEmployeeIdByUserId } = require('./methods/getEmployeeId');
+const { getUserIdByEmployeeId } = require('./methods/getUserId');
 
 exports.employeePlugin = {
     name: 'Employee',
@@ -9,8 +11,10 @@ exports.employeePlugin = {
             server.route(require('./routes/put_employee'));
             server.route(require('./routes/delete_employee'));
             server.route(require('./routes/get_all_employees'));
+            server.route(require('./routes/get_emp_by_dept'));
             server.route(require('./routes/reset_password'));
-
+            server.method('getEmployeeIdByUserId',getEmployeeIdByUserId);
+            server.method('getUserIdByEmployeeId',getUserIdByEmployeeId);
         } catch (e) {
             throw e;
         }

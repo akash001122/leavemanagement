@@ -1,1 +1,1 @@
-DATABASE_URL= xxxx-xxxx-xxxx
+export DATABASE_URL= xxxx-xxxx-xxxx

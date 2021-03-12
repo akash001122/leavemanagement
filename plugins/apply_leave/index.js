@@ -1,7 +1,11 @@
 'use strict';
 
+const { getEmployeeIdByLeaveId } = require('./methods/getEmployeeId');
+
+
+
 exports.leavePlugin = {
-    name: 'Emp',
+    name: 'leave',
     register: async (server,options) =>{
         try{
             server.auth.default('jwt');
@@ -9,6 +13,8 @@ exports.leavePlugin = {
             server.route(require('./routes/get_leave'));
             server.route(require('./routes/put_leave'));
             server.route(require('./routes/delete_leave'));
+            server.route(require('./routes/get_all_leaves'));
+            server.method('getEmployeeIdByLeaveId',getEmployeeIdByLeaveId)
         }catch(e){
             throw e;
         }

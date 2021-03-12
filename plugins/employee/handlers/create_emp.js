@@ -1,21 +1,9 @@
 'use strict';
-const { promisify } = require("util");
-const redis = require("redis");
-const Boom  = require("@hapi/boom");
-const client = redis.createClient();
-const getAsync = promisify(client.get).bind(client);
-client.on("error", function(error) {
-    console.error(error);
-  });
 const bcrypt = require('bcrypt');
 
 
 const employeeHandler = async (request,h) => {
     try{
-        const {tokenId} = request.auth.credentials;
-        const tokenDetails = await getAsync(tokenId);
-        const det = JSON.parse(tokenDetails);
-        if(det.role === "HR" && det.isValid){
             const firstName = request.payload.firstName;
             const lastName = request.payload.lastName;
             const email = request.payload.email;
@@ -24,27 +12,22 @@ const employeeHandler = async (request,h) => {
             const userName = request.payload.userName;
             var password = request.payload.password;
             const role = request.payload.role;
-            const depId = request.payload.depId;
+            const departmentId = request.payload.departmentId;
             const {prisma} = request.server.app;
-            var createEmp
         
             // Generate a salt at level 10 strength
             
             var hash = await bcrypt.hash(password,10);
             password = hash;
+            const userDetails = await prisma.$queryRaw`INSERT INTO public.userlogin(username, password, role) VALUES (${userName},${password},${role}) RETURNING id;`;
+            const createEmployee = await prisma.$queryRaw`INSERT INTO public.employee(firstname, lastname, email, mobile, roledescription, departmentid, userid) VALUES (${firstName},${lastName},${email},${mobile},${roleDescription},${departmentId}, ${userDetails[0].id}) RETURNING *;`;
             
-            createEmp = await prisma.$queryRaw`INSERT INTO public.employee(firstname, lastname, email, mobile, roledescription, depid) VALUES (${firstName},${lastName},${email},${mobile},${roleDescription},${depId}) RETURNING *;`;
-            await prisma.$queryRaw`INSERT INTO public.userlogin(username, password, role, empid) VALUES (${userName},${password},${role},${createEmp[0].id});`;
             
             return {
                 statusCode: 201,
                 message: `Employee ${firstName} created`,
-                data: createEmp,
-                jwt: tokenId
-            };
-        }else{
-            return Boom.unauthorized("Unauthorized")
-        }  
+                data: createEmployee
+            }; 
     }catch(e){
         throw e;
     }

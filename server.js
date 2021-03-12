@@ -1,5 +1,5 @@
 const Hapi = require('@hapi/hapi')
-const prisma = require('./prismaplugin/prisma')
+const prisma = require('./prismaplugin/prisma');
 const Inert = require('@hapi/inert');
 const Vision = require('@hapi/vision');
 const HapiSwagger = require('hapi-swagger');
@@ -7,9 +7,9 @@ const Pack = require('./package');
 const {employeePlugin} = require('./plugins/employee/index');
 const { authPlugin } = require('./plugins/auth/index');
 const {leavePlugin} = require('./plugins/apply_leave/index');
-const {managerPlugin} = require('./plugins/manager_leave/index');
-const {hrPlugin} = require('./plugins/hr_leave/index');
-const { departmentPlugin } = require('./plugins/create_department');
+const {managerPlugin} = require('./plugins/leave_management/manager_leave/index');
+const {hrPlugin} = require('./plugins/leave_management/hr_leave/index');
+const { departmentPlugin } = require('./plugins/department');
 
 const server = Hapi.server({
     port: 3000,
@@ -32,11 +32,26 @@ const init = async (server) => {
             },
             security: [{ Bearer: []  }]
         };
-    await server.register([Inert,Vision,
+    await server.register([
+        Inert,
+        Vision,
         {
             plugin: HapiSwagger,
             options: swaggerOptions
-        },authPlugin, prisma, employeePlugin, leavePlugin, managerPlugin, hrPlugin, departmentPlugin]);
+        },authPlugin,
+        {
+            plugin: require('hapi-authorization'),
+            options: {
+                roles: ['HR', 'MANAGER', 'EMPLOYEE']	
+            }
+        },
+        prisma, 
+        departmentPlugin,
+        employeePlugin, 
+        leavePlugin, 
+        managerPlugin, 
+        hrPlugin
+    ]);
     await server.initialize();
     await server.route({
         method:'GET',

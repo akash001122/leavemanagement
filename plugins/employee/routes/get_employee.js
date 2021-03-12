@@ -1,19 +1,24 @@
 'use strict';
-const {employeeDetailValidator} = require('../validations/get_emp');
+const employeeIdValidator = require('../validations/Array_employee_Id');
 const {employeeHandler} = require('../handlers/get_emp');
 
 
 module.exports = {
     method: 'GET',
-    path: '/employee/{empId}',
-    handler: employeeHandler,
+    path: '/employee',
     options: {
         auth: 'jwt',
         description: 'Get Employee',
         notes: 'Fetches employee details by the employeeid passed in path which can be done only by hr',
         tags: ['api'],
+        plugins: {
+            'hapiAuthorization': {
+                roles: ['HR','MANAGER']
+            }
+        },
         validate: {
-            params: employeeDetailValidator,
-        }
-    },
+            query : employeeIdValidator,
+        },
+        handler: employeeHandler,
+    }
 };
