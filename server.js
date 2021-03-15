@@ -13,7 +13,7 @@ const {departmentPlugin} = require('./plugins/department');
 
 const server = Hapi.server({
   port: 3000,
-  debug: false
+  debug: false,
   // host: 'localhost',
 });
 
@@ -39,14 +39,15 @@ const init = async (server) => {
     {
       plugin: require('hapi-pino'),
       options: {
-      prettyPrint: process.env.NODE_ENV !== 'production',
-      redact: ['req.headers.authorization']
-      }
+        prettyPrint: process.env.NODE_ENV !== 'production',
+        redact: ['req.headers.authorization'],
+      },
     },
     {
       plugin: HapiSwagger,
       options: swaggerOptions,
-    }, authPlugin,
+    },
+    authPlugin,
     {
       plugin: require('hapi-authorization'),
       options: {
@@ -70,7 +71,7 @@ const init = async (server) => {
       notes: 'Welcome page',
       tags: ['api'],
     },
-    handler: (request, h)=>{
+    handler: (request, h) => {
       return h.response({up: true});
     },
   });
@@ -78,7 +79,7 @@ const init = async (server) => {
   console.log(`Server running on ${server.info.uri}`);
   return server;
 };
-process.on('unhandledRejection', (err)=>{
+process.on('unhandledRejection', (err) => {
   console.log(err);
   process.exit(1);
 });
