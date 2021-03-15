@@ -41,6 +41,8 @@ const init = async (server) => {
       options: {
         prettyPrint: process.env.NODE_ENV !== 'production',
         redact: ['req.headers.authorization'],
+        logPayload: true,
+        logQueryParams: true,
       },
     },
     {
