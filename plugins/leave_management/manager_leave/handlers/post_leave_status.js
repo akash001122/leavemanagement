@@ -10,8 +10,7 @@ const leaveHandler = async (request, h) => {
     const leaveId = request.params.leaveId;
     const {leaveStatus} = request.payload;
     const employeeId = await request.server.methods.getEmployeeIdByLeaveId(leaveId);
-    const employeeUserId = await request.server.methods.getUserIdByEmployeeId(employeeId);
-    const employeeDepartmentId = await request.server.methods.getDeptId(employeeUserId);
+    const employeeDepartmentId = await request.server.methods.getDeptIdByEmployeeId(employeeId);
     if (managerDepartmentId === employeeDepartmentId) {
       const createLeave = await prisma.$queryRaw`UPDATE public.leave SET leavestatus= ${leaveStatus}, leaveupdatedtime = ${Date.now()} WHERE id = ${leaveId};`;
       return {
