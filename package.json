@@ -5,13 +5,12 @@
   "main": "index.js",
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "yarn prettier-format && yarn lint"
     }
   },
   "lint-staged": {
     "**/*.js": [
       "eslint . --fix",
-
       "git add"
     ]
   },
