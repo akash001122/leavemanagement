@@ -13,7 +13,7 @@ const {departmentPlugin} = require('./plugins/department');
 
 const server = Hapi.server({
   port: 3000,
-  debug: { request: ['error','database'] }
+  debug: false
   // host: 'localhost',
 });
 
@@ -36,6 +36,13 @@ const init = async (server) => {
   await server.register([
     Inert,
     Vision,
+    {
+      plugin: require('hapi-pino'),
+      options: {
+      prettyPrint: process.env.NODE_ENV !== 'production',
+      redact: ['req.headers.authorization']
+      }
+    },
     {
       plugin: HapiSwagger,
       options: swaggerOptions,
