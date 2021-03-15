@@ -5,7 +5,7 @@
   "main": "index.js",
   "husky": {
     "hooks": {
-      "pre-commit": "yarn prettier-format && yarn lint"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
