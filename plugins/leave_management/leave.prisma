@@ -1,0 +1,29 @@
+model leave {
+  id               Int       @id @default(autoincrement())
+  employeeid       Int
+  leavetype        LeaveType @default(OTHERS)
+  startdate        DateTime
+  enddate          DateTime
+  leavedescription String
+  visible          Boolean   @default(true)
+  leavecreatedtime DateTime  @default(now())
+  leavestatus      Status    @default(PENDING)
+  leaveupdatedtime  DateTime? @updatedAt
+  totalleavesleft  Int       @default(20)
+  employee         employee  @relation(fields: [employeeid], references: [id])
+}
+
+enum LeaveType {
+  SICK
+  PAID
+  COMPOFF
+  LOP
+  EMERGENCY
+  OTHERS
+}
+
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+}

@@ -1,0 +1,15 @@
+model employee {
+  id              Int         @id @default(autoincrement())
+  firstname       String
+  lastname        String
+  email           String      @unique  
+  mobile          String
+  roledescription String
+  visible          Boolean     @default(true)
+  departmentid    Int
+  department      department  @relation(fields: [departmentid], references: [id])
+  userid          Int
+  userlogin       userlogin   @relation(fields: [userid], references: [id])
+  leavehistory    leave[]
+  
+}
