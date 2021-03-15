@@ -16,9 +16,8 @@
   },
   "scripts": {
     "dev": "node server.js",
-    // "prepare": "husky install",
-    // "prettier-format": "prettier --config .prettierrc '**/*.js' --write",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prepare": "husky install"
   },
   "author": "",
   "license": "ISC",
