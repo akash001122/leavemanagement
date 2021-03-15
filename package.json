@@ -16,7 +16,10 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "prepare": "husky install",
+    "prettier-format": "prettier --config .prettierrc '**/*.js' --write",
+    "lint": "eslint . --ext .js"
   },
   "author": "",
   "license": "ISC",
