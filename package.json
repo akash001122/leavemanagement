@@ -9,14 +9,15 @@
     }
   },
   "lint-staged": {
-    "*": [
-      "eslint  --fix && prettier --write"
+    "**/*.{js,json}": [
+      "prettier --write",
+      "git add"
     ]
   },
   "scripts": {
     "dev": "node server.js",
-    "prepare": "husky install",
-    "prettier-format": "prettier --config .prettierrc '**/*.js' --write",
+    // "prepare": "husky install",
+    // "prettier-format": "prettier --config .prettierrc '**/*.js' --write",
     "lint": "eslint ."
   },
   "author": "",
