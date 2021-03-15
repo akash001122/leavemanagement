@@ -1,6 +1,5 @@
 const Joi = require('joi');
 
-
-module.exports =  Joi.object({
-       leaveId: Joi.number().integer()
+module.exports = Joi.object({
+  leaveId: Joi.number().integer(),
 });

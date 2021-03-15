@@ -3,5 +3,5 @@
 const Joi = require('joi');
 
 module.exports = Joi.object({
-    departmentId : Joi.number().integer().required()
-})
+  departmentId: Joi.number().integer().required(),
+});

@@ -3,5 +3,5 @@
 const Joi = require('joi');
 
 module.exports = Joi.object({
-    leaveStatus : Joi.string(),
-})
+  leaveStatus: Joi.string(),
+});

@@ -3,5 +3,5 @@
 const Joi = require('joi');
 
 module.exports = Joi.object({
-    password: Joi.string().required()
+  password: Joi.string().required(),
 });

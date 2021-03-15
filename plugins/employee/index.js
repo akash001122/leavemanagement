@@ -4,7 +4,7 @@ const {getUserIdByEmployeeId} = require('./methods/getUserId');
 
 exports.employeePlugin = {
   name: 'Employee',
-  register: async (server, options) =>{
+  register: async (server, options) => {
     try {
       server.route(require('./routes/post_employee'));
       server.route(require('./routes/get_employee'));
