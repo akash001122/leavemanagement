@@ -4,11 +4,18 @@ const employeeHandler = async (request, h) => {
   try {
     const {prisma} = request.server.app;
     const employeeId = request.query.employeeId;
-    await prisma.$queryRaw`UPDATE public.employee SET visible = false WHERE id = ANY(${employeeId});`;
+    const visible = request.payload.visible !== undefined ? request.payload.visible : false;
+    await prisma.$queryRaw`UPDATE public.employee SET visible = ${visible} WHERE id = ANY(${employeeId});`;
+    let message;
+    if (visible) {
+      message = 'Employee unarchived';
+    } else {
+      message = 'Employee deleted';
+    }
     return {
       statusCode: 201,
       employeeId,
-      message: `Employee deleted`,
+      message,
     };
   } catch (e) {
     throw e;

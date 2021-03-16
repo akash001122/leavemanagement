@@ -1,9 +1,10 @@
 'use strict';
 const {deptHandler} = require('../handlers/delete_dept');
 const departmentIdValidator = require('../validations/array_departmentId');
+const visibilityValidator = require('../validations/visibility');
 
 module.exports = {
-  method: 'DELETE',
+  method: 'PUT',
   path: '/department',
   handler: deptHandler,
   options: {
@@ -13,6 +14,7 @@ module.exports = {
     tags: ['api'],
     validate: {
       query: departmentIdValidator,
+      payload: visibilityValidator,
     },
     plugins: {
       hapiAuthorization: {

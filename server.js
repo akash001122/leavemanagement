@@ -14,6 +14,12 @@ const {departmentPlugin} = require('./plugins/department');
 const server = Hapi.server({
   port: 3000,
   debug: false,
+  routes: {
+    cors: {
+      origin: ['*'],
+      credentials: true,
+    },
+  },
   // host: 'localhost',
 });
 

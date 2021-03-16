@@ -4,11 +4,18 @@ const deptHandler = async (request, h) => {
   try {
     const {prisma} = request.server.app;
     const departmentId = request.query.departmentId;
-    await prisma.$queryRaw`UPDATE public.department SET visible = false WHERE id = ANY(${departmentId});`;
+    const visible = request.payload.visible !== undefined ? request.payload.visible : false;
+    await prisma.$queryRaw`UPDATE public.department SET visible = ${visible} WHERE id = ANY(${departmentId});`;
+    let message;
+    if (visible) {
+      message = 'Department unarchived';
+    } else {
+      message = 'Department deleted';
+    }
     return {
       statusCode: 201,
       departmentId,
-      message: `Department deleted`,
+      message,
     };
   } catch (e) {
     throw e;
