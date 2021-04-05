@@ -9,7 +9,5 @@ module.exports = Joi.object({
   mobile: Joi.string().required(),
   roleDescription: Joi.string().required(),
   userName: Joi.string().required(),
-  password: Joi.string().required(),
-  role: Joi.array().items(Joi.string()),
   departmentId: Joi.number().integer().required(),
 });

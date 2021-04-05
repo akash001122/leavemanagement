@@ -10,6 +10,7 @@ model employee {
   department      department  @relation(fields: [departmentid], references: [id])
   userid          Int
   userlogin       userlogin   @relation(fields: [userid], references: [id])
+  totalleavesleft Int         @default(24)
   leavehistory    leave[]
   
 }

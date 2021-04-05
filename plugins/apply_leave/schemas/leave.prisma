@@ -9,7 +9,6 @@ model leave {
   leavecreatedtime DateTime  @default(now())
   leavestatus      Status    @default(PENDING)
   leaveupdatedtime  DateTime? @updatedAt
-  totalleavesleft  Int       @default(20)
   employee         employee  @relation(fields: [employeeid], references: [id])
 }
 

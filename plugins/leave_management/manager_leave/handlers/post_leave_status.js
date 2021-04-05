@@ -4,7 +4,6 @@ const Boom = require('@hapi/boom');
 
 const leaveHandler = async (request, h) => {
   try {
-    const {prisma} = request.server.app;
     const leaveId = request.params.leaveId;
     const {leaveStatus} = request.payload;
     const managerUserId = request.auth.credentials.userId;
@@ -14,11 +13,9 @@ const leaveHandler = async (request, h) => {
       const managerDepartmentId = await request.server.methods.getDeptIdByUserId(managerUserId);
       const employeeDepartmentId = await request.server.methods.getDeptIdByEmployeeId(employeeId);
       if (managerDepartmentId === employeeDepartmentId) {
-        let createLeave;
+        const createLeave = request.server.methods.update_leave_status_by_leaveId(leaveId, leaveStatus);
         if (leaveStatus === 'APPROVED') {
-          createLeave = await prisma.$queryRaw`UPDATE public.leave SET leavestatus= ${leaveStatus}, leaveupdatedtime = ${Date.now()}, totalleavesleft = totalleavesleft - 1 WHERE id = ${leaveId};`;
-        } else {
-          createLeave = await prisma.$queryRaw`UPDATE public.leave SET leavestatus= ${leaveStatus}, leaveupdatedtime = ${Date.now()} WHERE id = ${leaveId};`;
+          await request.server.methods.update_total_leaves_by_employeeId(employeeId);
         }
         return {
           statusCode: 201,

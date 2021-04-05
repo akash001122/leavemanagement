@@ -2,6 +2,7 @@ model userlogin {
   id        Int      @id @default(autoincrement())
   username  String   @unique
   password  String
+  visibility Boolean @default(true)
   role      EmployeeRole[]  
   employee  employee[] 
 }

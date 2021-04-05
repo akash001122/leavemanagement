@@ -1,5 +1,4 @@
 'use strict';
-const bcrypt = require('bcrypt');
 
 const employeeHandler = async (request, h) => {
   try {
@@ -9,17 +8,11 @@ const employeeHandler = async (request, h) => {
     const mobile = request.payload.mobile;
     const roleDescription = request.payload.roleDescription;
     const userName = request.payload.userName;
-    let password = request.payload.password;
-    const role = request.payload.role;
     const departmentId = request.payload.departmentId;
     const {prisma} = request.server.app;
 
-    // Generate a salt at level 10 strength
-
-    const hash = await bcrypt.hash(password, 10);
-    password = hash;
-    const userDetails = await prisma.$queryRaw`INSERT INTO public.userlogin(username, password, role) VALUES (${userName},${password},${role}) RETURNING id;`;
-    const createEmployee = await prisma.$queryRaw`INSERT INTO public.employee(firstname, lastname, email, mobile, roledescription, departmentid, userid) VALUES (${firstName},${lastName},${email},${mobile},${roleDescription},${departmentId}, ${userDetails[0].id}) RETURNING *;`;
+    const userId = await request.server.methods.get_user_by_username(userName);
+    const createEmployee = await prisma.$queryRaw`INSERT INTO public.employee(firstname, lastname, email, mobile, roledescription, departmentid, userid) VALUES (${firstName},${lastName},${email},${mobile},${roleDescription},${departmentId}, ${userId}) RETURNING *;`;
 
     return {
       statusCode: 201,

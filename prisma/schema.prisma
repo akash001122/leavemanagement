@@ -1,3 +1,5 @@
+//******** AUTO GENERATED FILE, DO NOT EDIT.  *********
+
 
 generator client {
   provider = "prisma-client-js"
@@ -8,36 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model userlogin {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  password  String
-  role      EmployeeRole[]  
-  employee  employee[] 
-}
 
-model employee {
-  id              Int         @id @default(autoincrement())
-  firstname       String
-  lastname        String
-  email           String      @unique  
-  mobile          String
-  roledescription String
-  visible          Boolean     @default(true)
-  departmentid    Int
-  department      department  @relation(fields: [departmentid], references: [id])
-  userid          Int
-  userlogin       userlogin   @relation(fields: [userid], references: [id])
-  leavehistory    leave[]
-  
-}
-
-model department {
-  id       Int        @id @default(autoincrement())
-  name     String
-  visible  Boolean    @default(true)
-  employee employee[]
-}
 
 model leave {
   id               Int       @id @default(autoincrement())
@@ -50,14 +23,7 @@ model leave {
   leavecreatedtime DateTime  @default(now())
   leavestatus      Status    @default(PENDING)
   leaveupdatedtime  DateTime? @updatedAt
-  totalleavesleft  Int       @default(20)
   employee         employee  @relation(fields: [employeeid], references: [id])
-}
-
-enum EmployeeRole {
-  HR
-  MANAGER
-  EMPLOYEE
 }
 
 enum LeaveType {
@@ -73,4 +39,44 @@ enum Status {
   PENDING
   APPROVED
   REJECTED
+}
+
+
+model department {
+  id       Int        @id @default(autoincrement())
+  name     String
+  visible  Boolean    @default(true)
+  employee employee[]
+}
+
+model employee {
+  id              Int         @id @default(autoincrement())
+  firstname       String
+  lastname        String
+  email           String      @unique  
+  mobile          String
+  roledescription String
+  visible          Boolean     @default(true)
+  departmentid    Int
+  department      department  @relation(fields: [departmentid], references: [id])
+  userid          Int
+  userlogin       userlogin   @relation(fields: [userid], references: [id])
+  totalleavesleft Int         @default(24)
+  leavehistory    leave[]
+  
+}
+
+model userlogin {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  visibility Boolean @default(true)
+  role      EmployeeRole[]  
+  employee  employee[] 
+}
+
+enum EmployeeRole {
+  HR
+  MANAGER
+  EMPLOYEE
 }
