@@ -6,10 +6,9 @@ const HapiSwagger = require('hapi-swagger');
 const Pack = require('./package');
 const {employeePlugin} = require('./plugins/employee/index');
 const {authPlugin} = require('./plugins/auth/index');
-const {leavePlugin} = require('./plugins/apply_leave/index');
-const {managerPlugin} = require('./plugins/leave_management/manager_leave/index');
-const {hrPlugin} = require('./plugins/leave_management/hr_leave/index');
+const {leavePlugin} = require('./plugins/leave/index');
 const {departmentPlugin} = require('./plugins/department');
+const {userPlugin} = require('./plugins/users');
 
 const server = Hapi.server({
   port: 3000,
@@ -66,8 +65,7 @@ const init = async (server) => {
     departmentPlugin,
     employeePlugin,
     leavePlugin,
-    managerPlugin,
-    hrPlugin,
+    userPlugin,
   ]);
   await server.initialize();
   await server.route({

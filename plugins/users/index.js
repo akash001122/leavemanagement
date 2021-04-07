@@ -1,7 +1,7 @@
 'use strict';
 
-exports.employeePlugin = {
-  name: 'Employee',
+exports.userPlugin = {
+  name: 'Users',
   register: async (server, options) => {
     try {
       // Methods

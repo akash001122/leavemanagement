@@ -11,6 +11,6 @@
         "sourceType": "module"
     },
     "rules": {
-        "max-len": ["error", { "code": 510 }]
+        "max-len": ["error", { "code": 560 }]
     }
 }

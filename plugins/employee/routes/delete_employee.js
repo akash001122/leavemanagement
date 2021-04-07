@@ -1,11 +1,8 @@
 'use strict';
-
-const employeeIdValidator = require('../validations/Array_employee_Id');
 const {employeeHandler} = require('../handlers/delete_emp');
-const visibilityValidator = require('../../department/validations/visibility');
 
 module.exports = {
-  method: 'PUT',
+  method: 'DELETE',
   path: '/employee',
   options: {
     auth: 'jwt',
@@ -17,10 +14,7 @@ module.exports = {
         roles: ['HR'],
       },
     },
-    validate: {
-      query: employeeIdValidator,
-      payload: visibilityValidator,
-    },
+    validate: require('../validations/delete_employee'),
   },
   handler: employeeHandler,
 };

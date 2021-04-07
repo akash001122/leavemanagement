@@ -3,7 +3,7 @@ model userlogin {
   username  String   @unique
   password  String
   visibility Boolean @default(true)
-  role      EmployeeRole[]  
+  role      EmployeeRole  
   employee  employee[] 
 }
 

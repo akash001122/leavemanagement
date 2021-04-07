@@ -1,6 +1,5 @@
 'use strict';
 const {deptHandler} = require('../handlers/create_dept');
-const deptBodyValidation = require('../validations/departmentPayload.js');
 
 module.exports = {
   method: 'POST',
@@ -11,9 +10,7 @@ module.exports = {
     description: 'Create new department',
     notes: 'Creates new department which can be done only by hr',
     tags: ['api'],
-    validate: {
-      payload: deptBodyValidation,
-    },
+    validate: require('../validations/create_department.js'),
     plugins: {
       hapiAuthorization: {
         roles: ['HR'],

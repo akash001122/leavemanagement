@@ -1,6 +1,6 @@
 'use strict';
 
-const employeeHandler = async (request, h) => {
+module.exports = async (request, h) => {
   try {
     const {prisma} = request.server.app;
     const employeeId = request.query.employeeId;
@@ -21,5 +21,3 @@ const employeeHandler = async (request, h) => {
     throw e;
   }
 };
-
-exports.employeeHandler = employeeHandler;

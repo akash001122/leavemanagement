@@ -1,5 +1,4 @@
 'use strict';
-const employeeDetailValidator = require('../validations/employeeDetail');
 const {employeeHandler} = require('../handlers/create_emp');
 
 module.exports = {
@@ -15,9 +14,7 @@ module.exports = {
         roles: ['HR'],
       },
     },
-    validate: {
-      payload: employeeDetailValidator,
-    },
+    validate: require('../validations/post_employee'),
     handler: employeeHandler,
   },
 };

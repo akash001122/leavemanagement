@@ -1,6 +1,6 @@
 'use strict';
 
-const employeeHandler = async (request, h) => {
+module.exports = async (request, h) => {
   try {
     const {prisma} = request.server.app;
     const userDetails = await prisma.$queryRaw`SELECT id, username, role FROM public.userlogin WHERE visibility =true;`;
@@ -13,4 +13,3 @@ const employeeHandler = async (request, h) => {
     throw e;
   }
 };
-exports.employeeHandler = employeeHandler;

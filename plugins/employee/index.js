@@ -17,6 +17,7 @@ exports.employeePlugin = {
       server.method('getEmployeeIdByUserId', getEmployeeIdByUserId);
       server.method('getUserIdByEmployeeId', getUserIdByEmployeeId);
       server.method(require('./methods/update_total_leaves_by_employeeId'));
+      server.method(require('./methods/get_employee_details_by_userId'));
     } catch (e) {
       throw e;
     }

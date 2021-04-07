@@ -1,6 +1,4 @@
 'use strict';
-const employeeDetailValidator = require('../validations/updateEmployeeDetail');
-const employeeIdValidator = require('../validations/employee_id');
 const {employeeHandler} = require('../handlers/put_emp');
 
 module.exports = {
@@ -16,10 +14,7 @@ module.exports = {
         roles: ['HR'],
       },
     },
-    validate: {
-      payload: employeeDetailValidator,
-      params: employeeIdValidator,
-    },
+    validate: require('../validations/put_employee'),
     handler: employeeHandler,
   },
 };

@@ -1,5 +1,4 @@
 'use strict';
-const employeeIdValidator = require('../validations/Array_employee_Id');
 const {employeeHandler} = require('../handlers/get_emp');
 
 module.exports = {
@@ -15,9 +14,7 @@ module.exports = {
         roles: ['HR', 'MANAGER'],
       },
     },
-    validate: {
-      query: employeeIdValidator,
-    },
+    validate: require('../validations/get_employee'),
     handler: employeeHandler,
   },
 };
