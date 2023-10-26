@@ -1,7 +1,6 @@
 {
-  "name": "test",
+  "name": "leavemanagement",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "husky": {
     "hooks": {
@@ -16,9 +15,10 @@
   },
   "scripts": {
     "dev": "node server.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start": "node server.js"
   },
-  "author": "",
+  "author": "Akash S",
   "license": "ISC",
   "dependencies": {
     "@hapi/boom": "^9.1.1",
@@ -47,5 +47,17 @@
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
     "prisma": "^2.16.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/akash001122/leavemanagement.git"
+  },
+  "keywords": [
+    "leave"
+  ],
+  "bugs": {
+    "url": "https://github.com/akash001122/leavemanagement/issues"
+  },
+  "homepage": "https://github.com/akash001122/leavemanagement#readme",
+  "description": ""
 }
